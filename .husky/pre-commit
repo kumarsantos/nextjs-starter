@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# 1. Branch name validation (Instant)
+node scripts/check-branch-name.mjs
+
+# 2. Type Check full project (Catches broken types across all components)
+pnpm exec tsc --noEmit
+
+# 3. Lint & Format staged files (Formats code and fixes linting)
+pnpm exec lint-staged

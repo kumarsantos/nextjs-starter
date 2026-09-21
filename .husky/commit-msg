@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if pnpm exec commitlint --edit "$1"; then
+  exit 0
+fi
+
+printf "\n"
+printf "Commit message rejected. Use the Conventional Commits format:\n"
+printf "\n"
+printf "  [type]: [short summary]\n"
+printf "\n"
+printf "Allowed types: feat, fix, hotfix, chore, docs, style, refactor, perf, test, build, ci, revert\n"
+printf "\n"
+printf "Examples:\n"
+printf "  feat: add timesheet grid\n"
+printf "  fix: fix expense calculation\n"
+printf "  hotfix: fix login crash\n"
+printf "  chore: setup lint config\n"
+printf "  refactor: extract api client\n"
+printf "  docs: update readme\n"
+printf "  test: add unit tests for format\n"
+printf "\n"
+printf "Keep the summary lowercase and under 100 characters.\n"
+printf "\n"
+exit 1
