@@ -8,7 +8,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
-    NEXT_PUBLIC_VERCEL_URL: z.string().url().optional(),
+    NEXT_PUBLIC_VERCEL_URL: z.string().url().optional().or(z.literal('')),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
