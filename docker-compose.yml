@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: timesheet-tracker-db
+    container_name: nextjs-starter-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-timesheet-tracker}
+      POSTGRES_DB: ${POSTGRES_DB:-nextjs-starter}
     ports:
       - '5432:5432'
     volumes:
@@ -15,7 +15,7 @@ services:
       test:
         [
           'CMD-SHELL',
-          'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-timesheet-tracker}',
+          'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-nextjs-starter}',
         ]
       interval: 5s
       timeout: 5s
