@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f .env.development next dev --turbo",
-    "dev:stage": "env-cmd -f .env.stage next dev",
     "dev:test": "env-cmd -f .env.test next dev",
     "build": "next build",
     "build:local": "env-cmd -f .env.production next build",
