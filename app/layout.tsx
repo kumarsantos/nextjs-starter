@@ -15,11 +15,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${fontInter.variable} ${fontMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
-      >
-        <ThemeProvider>{children}</ThemeProvider>
+      <head>
         <JsonLd />
+      </head>
+      <body
+        className={`${fontInter.variable} ${fontMono.variable} min-h-screen bg-background text-foreground antialiased`}
+      >
+        <ThemeProvider>
+          <div className="relative flex min-h-screen flex-col">
+            {/* Navbar */}
+            {children}
+            {/* Footer */}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
