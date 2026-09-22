@@ -117,7 +117,7 @@ export const logger = winston.createLogger({
   levels: winston.config.npm.levels,
   level: logLevel,
   format: winston.format.splat(),
-  defaultMeta: { service: 'time-sheet-tracker', env: process.env.NODE_ENV },
+  defaultMeta: { service: 'next-js-starter', env: process.env.NODE_ENV },
   transports,
   exitOnError: false,
 });
