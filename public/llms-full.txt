@@ -1,0 +1,29 @@
+# Next.js 15 Starter Repository — Full Documentation
+
+> Production-grade Next.js 15 starter repository built with Tailwind CSS v4, ESLint 9 Flat Config, TypeScript, and automated Git workflows.
+
+This document contains the complete technical specifications, guidelines, and structural patterns for direct ingestion by AI models, agents, and IDE tools (Cursor, Windsurf, Copilot).
+
+---
+
+# 1. Project Architecture
+
+The repository follows a clean, feature-driven structure built on Next.js 15 App Router:
+
+```text
+.
+├── app/
+│   ├── (marketing)/      # Route group for landing/marketing pages (uses Lenis smooth scroll)
+│   ├── (dashboard)/      # Route group for app/dashboard (standard native scrolling)
+│   ├── layout.tsx        # Root layout with Geist font & ThemeProvider
+│   ├── globals.css       # Tailwind CSS v4 imports and theme variables
+│   ├── not-found.tsx     # Global 404 page
+│   ├── providers.tsx     # Client-side ThemeProvider (next-themes)
+│   ├── robots.ts         # Robots.txt generator for AI crawlers
+│   └── sitemap.ts        # Dynamic XML sitemap generator
+├── components/           # Reusable UI components
+├── public/               # Static assets & AI metadata (llms.txt, llms-full.txt)
+├── .husky/               # Husky v9 git hooks (pre-commit, commit-msg)
+├── eslint.config.mjs     # Native ESLint 9 Flat Config
+├── postcss.config.mjs    # Tailwind v4 PostCSS configuration
+└── package.json          # Project scripts and dependency tree

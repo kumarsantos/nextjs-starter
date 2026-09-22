@@ -1,0 +1,27 @@
+# Next.js 15 Starter Repository
+
+> Production-grade Next.js 15 starter repository built with Tailwind CSS v4, ESLint 9 Flat Config, TypeScript, and Husky automation.
+
+## Core Architecture & Conventions
+
+- [Architecture Overview](https://yourdomain.com/docs/architecture): App Router layout, directory structure, route groups, and component organization.
+- [Code & Linting Standards](https://yourdomain.com/docs/standards): ESLint 9 Flat Config (`eslint.config.mjs`), Prettier configuration, and TypeScript guidelines.
+- [Git Hooks & Workflow](https://yourdomain.com/docs/git-workflow): Husky v9 pre-commit verification, lint-staged automation, and Conventional Commit message rules.
+
+## Tech Stack & Tooling
+
+- **Framework**: Next.js 15 (App Router, React 19)
+- **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`, CSS variables, `@theme` directive)
+- **Linting & Formatting**: Native ESLint v9 Flat Config, Prettier
+- **Git Hygiene**: Husky v9, `lint-staged`, Commitlint (Conventional Commits)
+- **Theme Management**: `next-themes` with hydration protection
+- **Smooth Scroll**: Lenis (scoped to marketing route groups)
+
+## Full Context
+
+- [llms-full.txt](https://yourdomain.com/llms-full.txt): Complete concatenated documentation and configuration guide for direct LLM ingestion.
+
+## Discovery & Indexing
+
+- [Sitemap](https://yourdomain.com/sitemap.xml): Primary XML index for search engines and crawlers.
+- [Robots File](https://yourdomain.com/robots.txt): Crawler rules for AI and search bots.

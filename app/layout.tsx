@@ -1,22 +1,12 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { fontInter, fontMono } from '@/lib/fonts';
+import { JsonLd } from '@/lib/seo/json-ld';
+import { constructMetadata } from '@/lib/seo/metadata';
+import { constructViewport } from '@/lib/viewport';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-export const metadata: Metadata = {
-  title: 'Next.js Starter',
-  description: 'Production-grade Next.js starter repository',
-};
+export const metadata = constructMetadata();
+export const viewport = constructViewport();
 
 export default function RootLayout({
   children,
@@ -25,8 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${fontInter.variable} ${fontMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
+      >
         <ThemeProvider>{children}</ThemeProvider>
+        <JsonLd />
       </body>
     </html>
   );
