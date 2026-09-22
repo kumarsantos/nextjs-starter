@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { getAppUrl } from '@/lib/app-url';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yourdomain.com';
+  const baseUrl = getAppUrl();
 
   // Example: Fetch dynamic routes from DB/CMS if applicable
   // const posts = await getPosts();
@@ -16,12 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
     },
   ];
 

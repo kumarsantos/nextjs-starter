@@ -1,29 +1,44 @@
-# Next.js 15 Starter Repository — Full Documentation
+# Next.js Starter Repository — Full Context
 
-> Production-grade Next.js 15 starter repository built with Tailwind CSS v4, ESLint 9 Flat Config, TypeScript, and automated Git workflows.
+> Production-grade Next.js 16 starter repository built with the App Router, TypeScript, Tailwind CSS v4, ESLint 9 Flat Config, and Husky automation.
 
-This document contains the complete technical specifications, guidelines, and structural patterns for direct ingestion by AI models, agents, and IDE tools (Cursor, Windsurf, Copilot).
+## App Router
 
----
+- **app/layout.tsx** — root layout: fonts (`next/font` Inter + JetBrains Mono), `next-themes` provider, theme toggle, JSON-LD, metadata/viewport exports.
+- **app/page.tsx** — landing page.
+- **app/loading.tsx / app/error.tsx** — Suspense fallback and client error boundary with reset.
+- **app/not-found.tsx / app/global-error.tsx** — 404 and top-level error UI.
+- **app/robots.ts / app/sitemap.ts** — crawler rules (incl. AI bots) and XML sitemap, both driven by `getAppUrl()`.
+- **app/api/health/route.ts** — JSON health endpoint.
 
-# 1. Project Architecture
+## Libraries
 
-The repository follows a clean, feature-driven structure built on Next.js 15 App Router:
+- **lib/env.ts** — Zod-validated, typed env via `@t3-oss/env-nextjs`. NODE_ENV is restricted to `development|test|production`.
+- **lib/app-url.ts** — `getAppUrl()` resolves the canonical base URL (NEXT_PUBLIC_APP_URL → NEXT_PUBLIC_VERCEL_URL → localhost fallback).
+- **lib/seo/metadata.ts** — `constructMetadata()` helper (OG/Twitter/canonical/metadataBase).
+- **lib/seo/json-ld.tsx** — `JsonLd()` component emitting schema-dts typed JSON-LD (WebSite + Organization).
+- **lib/viewport/index.ts** — `constructViewport()` with `interactiveWidget: 'resizes-visual'`.
+- **lib/logger/index.ts** — winston logger: JSON in production, pretty in dev, recursive secret redaction, optional `LOG_DIR` file transports, `createScopedLogger()`.
 
-```text
-.
-├── app/
-│   ├── (marketing)/      # Route group for landing/marketing pages (uses Lenis smooth scroll)
-│   ├── (dashboard)/      # Route group for app/dashboard (standard native scrolling)
-│   ├── layout.tsx        # Root layout with Geist font & ThemeProvider
-│   ├── globals.css       # Tailwind CSS v4 imports and theme variables
-│   ├── not-found.tsx     # Global 404 page
-│   ├── providers.tsx     # Client-side ThemeProvider (next-themes)
-│   ├── robots.ts         # Robots.txt generator for AI crawlers
-│   └── sitemap.ts        # Dynamic XML sitemap generator
-├── components/           # Reusable UI components
-├── public/               # Static assets & AI metadata (llms.txt, llms-full.txt)
-├── .husky/               # Husky v9 git hooks (pre-commit, commit-msg)
-├── eslint.config.mjs     # Native ESLint 9 Flat Config
-├── postcss.config.mjs    # Tailwind v4 PostCSS configuration
-└── package.json          # Project scripts and dependency tree
+## Security
+
+- `next.config.ts` headers: CSP, `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`; HSTS only when `NODE_ENV=production`.
+- `poweredByHeader: false`; strict image formats (AVIF/WebP).
+- Logger redacts `password`, `token`, `authorization`, `secret`, `api*`, `cookie` and friends recursively.
+
+## Tooling
+
+- **eslint.config.mjs** — ESLint 9 flat config: Next core-web-vitals, TypeScript, Prettier.
+- **Git hooks (.husky/)** — pre-commit: branch validation → full `tsc --noEmit` → lint-staged; commit-msg: commitlint; pre-push: `scripts/check-push-guard.mjs` (name + protected-branch guard, then `pnpm check`).
+- **Vitest** — `vitest.config.ts`, tests in `tests/`.
+- **CI** — `.github/workflows/ci.yml`: typecheck, lint, test, build.
+
+## Environment Variables
+
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `NEXT_PUBLIC_APP_URL` | No (fallback localhost) | Canonical public URL for SEO/metadata |
+| `NEXT_PUBLIC_VERCEL_URL` | No | Set by Vercel deploys |
+| `DATABASE_URL` | No (optional) | Required once a data layer is added |
+| `POSTGRES_*` | No | Consumed by `docker-compose.yml` |
+| `LOG_LEVEL` / `LOG_DIR` | No | Logger tuning |

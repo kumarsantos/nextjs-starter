@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
-
-const APP_DEFAULT_TITLE = 'ticktock';
-const APP_TITLE_TEMPLATE = '%s | ticktock';
-const APP_DESCRIPTION =
-  'ticktock — multi-tenant weekly timesheet tracker built with the Next.js App Router.';
-const rawAppUrl =
-  process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000';
-const APP_URL = rawAppUrl.startsWith('http') ? rawAppUrl : `https://${rawAppUrl}`;
+import { getAppUrl } from '@/lib/app-url';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE_TEMPLATE } from '@/lib/seo/site';
 
 interface ConstructMetadataParams {
   title?: string;
@@ -18,14 +12,14 @@ interface ConstructMetadataParams {
 }
 
 export function constructMetadata({
-  title = APP_DEFAULT_TITLE,
-  description = APP_DESCRIPTION,
-  image = '/og-image.png',
+  title = SITE_NAME,
+  description = SITE_DESCRIPTION,
+  image = '/assets/og-default.png',
   icons = '/favicon.ico',
   noIndex = false,
   canonicalUrl,
 }: ConstructMetadataParams = {}): Metadata {
-  // Ensure image path is absolute if it's relative
+  const APP_URL = getAppUrl();
   const imageUrl = image.startsWith('http')
     ? image
     : `${APP_URL}${image.startsWith('/') ? image : `/${image}`}`;
@@ -34,7 +28,7 @@ export function constructMetadata({
     metadataBase: new URL(APP_URL),
     title: {
       default: title,
-      template: APP_TITLE_TEMPLATE,
+      template: SITE_TITLE_TEMPLATE,
     },
     description,
     alternates: {
@@ -42,8 +36,8 @@ export function constructMetadata({
     },
     openGraph: {
       type: 'website',
-      siteName: APP_DEFAULT_TITLE,
-      title: title === APP_DEFAULT_TITLE ? title : `${title} | ${APP_DEFAULT_TITLE}`,
+      siteName: SITE_NAME,
+      title: title === SITE_NAME ? title : `${title} | ${SITE_NAME}`,
       description,
       images: [
         {
@@ -56,7 +50,7 @@ export function constructMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: title === APP_DEFAULT_TITLE ? title : `${title} | ${APP_DEFAULT_TITLE}`,
+      title: title === SITE_NAME ? title : `${title} | ${SITE_NAME}`,
       description,
       images: [imageUrl],
     },

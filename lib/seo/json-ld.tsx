@@ -1,8 +1,8 @@
 import type { Thing, WithContext } from 'schema-dts';
-import { env } from '../env';
+import { getAppUrl } from '../app-url';
+import { SITE_DESCRIPTION, SITE_NAME } from './site';
 
-const APP_URL = env.NEXT_PUBLIC_APP_URL || env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000';
-const APP_NAME = 'ticktock';
+const APP_URL = getAppUrl();
 
 // Default global schema used when no `code` prop is provided
 const DEFAULT_SCHEMA = {
@@ -12,14 +12,14 @@ const DEFAULT_SCHEMA = {
       '@type': 'WebSite',
       '@id': `${APP_URL}/#website`,
       url: APP_URL,
-      name: APP_NAME,
-      description: 'Multi-tenant weekly timesheet tracker built with Next.js App Router.',
+      name: SITE_NAME,
+      description: SITE_DESCRIPTION,
       inLanguage: 'en-US',
     },
     {
       '@type': 'Organization',
       '@id': `${APP_URL}/#organization`,
-      name: `${APP_NAME} Inc`,
+      name: `${SITE_NAME} Inc`,
       url: APP_URL,
       logo: `${APP_URL}/logo.png`,
     },
