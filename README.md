@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Starter
 
-## Getting Started
+A production-grade [Next.js 16](https://nextjs.org) starter using the App
+Router, TypeScript, Tailwind CSS v4, and a hard-edged engineering toolchain.
 
-First, run the development server:
+## Stack
+
+- **Framework:** Next.js 16 (App Router, React 19)
+- **Language:** TypeScript (strict)
+- **Styling:** Tailwind CSS v4 + `next/font` (Inter, JetBrains Mono)
+- **Validation:** `@t3-oss/env-nextjs` + Zod runtime environment checks
+- **Logging:** winston with secret redaction, JSON in prod / pretty in dev
+- **SEO:** metadata/viewport API, sitemap, robots (incl. AI-crawler rules), JSON-LD
+- **Security headers:** CSP, HSTS (prod only), COOP, CORP, nosniff, frame deny
+- **Tooling:** ESLint 9 flat config, Prettier, Husky, commitlint, lint-staged,
+  branch-name + push-guard scripts, GitHub Actions CI, Vitest
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # edit for your environment
+pnpm dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Optional local Postgres for later work:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm db:up                  # docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| Command                  | Description                                        |
+| ------------------------ | -------------------------------------------------- |
+| `pnpm dev`               | Start the dev server                               |
+| `pnpm build`             | Production build                                   |
+| `pnpm start`             | Start the production server                        |
+| `pnpm lint`              | ESLint                                             |
+| `pnpm typecheck`         | `tsc --noEmit`                                     |
+| `pnpm test`              | Vitest (unit)                                      |
+| `pnpm check`             | typecheck + lint + test (used by hooks/CI)         |
+| `pnpm format`            | Prettier write                                     |
+| `pnpm og:generate`       | Regenerate `public/assets/og-default.png` from SVG |
+| `pnpm db:up` / `db:down` | Start/stop local Postgres (docker)                 |
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/          App Router routes: layout, page, error, loading, not-found,
+              robots, sitemap, api/health
+components/   React components (providers/, ui/)
+lib/          env, app-url, fonts, logger, seo, viewport
+scripts/      og-image generator, git guard scripts
+tests/        Vitest unit tests
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Placeholders (`actions/`, `services/`, `database/`, `hooks/`, ...) ship as
+`.gitkeep` so the intended layering survives a fresh clone.
 
-## Deploy on Vercel
+## Environment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Required by the app today: `NEXT_PUBLIC_APP_URL` (canonical public URL for
+metadata/sitemap). `DATABASE_URL` is validated but optional until a data layer
+is added. See `.env.example` for full list.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Git hygiene
+
+- Branch names: `feature/`, `fix/`, `hotfix/`, `chore/`, `refactor/`, ...
+- Commits: Conventional Commits via commitlint.
+- Direct pushes to `main`/`develop`/`staging`/`release` are blocked locally;
+  push a feature branch and merge via pull request.
+
+## Deployment
+
+Build output is platform-agnostic (tested on Vercel-compatible hosts). CI runs
+typecheck, lint, tests, and a production build on every push to `main`/`develop`
+and every pull request.
