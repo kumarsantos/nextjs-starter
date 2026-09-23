@@ -74,5 +74,9 @@ is added. See `.env.example` for full list.
 ## Deployment
 
 Build output is platform-agnostic (tested on Vercel-compatible hosts). CI runs
-typecheck, lint, tests, and a production build on every push to `main`/`develop`
-and every pull request.
+format, lint, typecheck, and tests on every pull request, plus a Docker image
+build (without deployment). Pushes to `main`/`develop` run the same checks and
+also build the Docker image. Every PR gets a unique image tag based on the
+author and PR number (e.g. `next-js-starter:pr-<user>-pr<number>-<sha>`), and
+references are logged in the CI output so they can be copied and used manually
+(`docker run`/`docker tag`/`docker push`).

@@ -14,7 +14,7 @@ export const allowedTypes = [
   'build',
   'revert',
 ];
-export const exemptBranches = ['main', 'master', 'develop', 'staging', 'release'];
+export const exemptBranches = ['main', 'master', 'develop', 'stage', 'release', 'test'];
 
 export function isValidBranchName(branch) {
   if (exemptBranches.includes(branch)) return true;

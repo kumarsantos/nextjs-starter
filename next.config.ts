@@ -50,6 +50,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: 'standalone', // Slim runtime image for Docker (see Dockerfile)
   cacheComponents: true, // Enables 'use cache', cacheLife, and cacheTag
   reactStrictMode: true,
   poweredByHeader: false,

@@ -1,0 +1,72 @@
+name: 'Build Docker image'
+description: 'Build the standalone Docker image locally with per-user, per-PR unique tags and expose the reference. Does not deploy.'
+
+inputs:
+  environment:
+    description: 'Environment tag (develop | test | production | pr)'
+    required: true
+
+outputs:
+  image:
+    description: 'Unique immutable image reference for this run ({env}-{actor}-pr{number}-{sha}).'
+    value: ${{ steps.tags.outputs.image }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Compute image tags
+      id: tags
+      shell: bash
+      run: |
+        name="${{ vars.ECR_REPOSITORY || github.event.repository.name || 'next-js-starter' }}"
+        env="${{ inputs.environment }}"
+        actor="${{ github.actor }}"
+        pr="${{ github.event.pull_request.number }}"
+        sha="${{ github.sha }}"
+
+        {
+          echo "tags<<_EOF_"
+          echo "${name}:${env}"
+          echo "${name}:${env}-${sha}"
+          echo "${name}:${env}-${actor}-${sha}"
+          if [ -n "${pr}" ] && [ "${pr}" != "null" ]; then
+            echo "${name}:${env}-${actor}-pr${pr}"
+            echo "${name}:${env}-${actor}-pr${pr}-${sha}"
+            image="${name}:${env}-${actor}-pr${pr}-${sha}"
+          else
+            image="${name}:${env}-${actor}-${sha}"
+          fi
+          echo "_EOF_"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "image=${image}" >> "$GITHUB_OUTPUT"
+
+    - name: Build image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: false
+        load: true
+        platforms: linux/amd64
+        build-args: |
+          NEXT_PUBLIC_APP_URL=${{ vars.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
+        tags: ${{ steps.tags.outputs.tags }}
+        cache-from: type=gha,scope=${{ inputs.environment }}
+        cache-to: type=gha,mode=max,scope=${{ inputs.environment }}
+        labels: |
+          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.version=${{ inputs.environment }}-${{ github.sha }}
+
+    - name: Log image reference
+      shell: bash
+      run: |
+        echo "============================================"
+        echo " Docker image(s) generated in this run:"
+        printf '%s\n' "${{ steps.tags.outputs.tags }}"
+        echo " Copy the unique tag above to run it locally:"
+        echo "   docker run --rm -p 3000:3000 ${{ steps.tags.outputs.image }}"
+        echo "============================================"
