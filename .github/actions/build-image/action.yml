@@ -5,6 +5,13 @@ inputs:
   environment:
     description: 'Environment tag (develop | test | production | pr)'
     required: true
+  image_name:
+    description: 'Docker image name (repository).'
+    required: true
+  app_url:
+    description: 'Public base URL inlined at build time.'
+    required: false
+    default: 'http://localhost:3000'
 
 outputs:
   image:
@@ -21,7 +28,7 @@ runs:
       id: tags
       shell: bash
       run: |
-        name="${{ vars.ECR_REPOSITORY || github.event.repository.name || 'next-js-starter' }}"
+        name="${{ inputs.image_name }}"
         env="${{ inputs.environment }}"
         actor="${{ github.actor }}"
         pr="${{ github.event.pull_request.number }}"
@@ -52,7 +59,7 @@ runs:
         load: true
         platforms: linux/amd64
         build-args: |
-          NEXT_PUBLIC_APP_URL=${{ vars.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
+          NEXT_PUBLIC_APP_URL=${{ inputs.app_url }}
         tags: ${{ steps.tags.outputs.tags }}
         cache-from: type=gha,scope=${{ inputs.environment }}
         cache-to: type=gha,mode=max,scope=${{ inputs.environment }}

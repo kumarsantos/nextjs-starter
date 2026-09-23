@@ -54,6 +54,8 @@ jobs:
         uses: ./.github/actions/build-image
         with:
           environment: pr
+          image_name: ${{ vars.ECR_REPOSITORY || github.event.repository.name || 'next-js-starter' }}
+          app_url: ${{ vars.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
 
       - name: Image
         run: 'echo "Image: ${{ steps.docker.outputs.image }}"'
